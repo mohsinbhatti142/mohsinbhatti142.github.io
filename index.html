@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mohsin Sheraz — Data Scientist Portfolio</title>
+
+<!-- Fonts: Inter (Standard Professional Font) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* --- 1. Custom Variables (Color Scheme) --- */
+:root{
+    --bg:#0b1220;
+    --card:#0f1724;
+    --muted:#9aa7c7;
+    --accent:#64ffda; /* Teal accent color */
+    --glass: rgba(255,255,255,0.04);
+    --glass-2: rgba(255,255,255,0.02);
+    --card-radius: 14px;
+    color-scheme: dark;
+}
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    /* Subtle background gradient for depth */
+    background:
+      radial-gradient(800px 400px at 10% 10%, rgba(100,255,218,0.03), transparent 8%),
+      radial-gradient(600px 300px at 90% 80%, rgba(9,132,235,0.02), transparent 6%),
+      var(--bg);
+    color:#dbe9ff;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:40px 24px;
+}
+
+/* --- 2. Layout Structure --- */
+.wrap{
+    max-width:1100px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: 360px 1fr; /* Two-column layout */
+    gap:28px;
+    align-items:start;
+}
+
+/* --- 3. Profile Card (Left Column) Styles --- */
+.profile-card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:var(--card-radius);
+    padding:20px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    transform-style: preserve-3d;
+    perspective: 1200px;
+    transition: transform 0.4s cubic-bezier(.2,.9,.2,1);
+}
+.profile-top{display:flex;gap:16px;align-items:center;}
+.avatar{
+    width:84px;height:84px;border-radius:12px;
+    background:linear-gradient(135deg,#1b2b3b,#122230);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:var(--accent);font-size:28px;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.6), inset 0 -6px 18px rgba(0,0,0,0.4);
+    overflow:hidden;
+}
+h1{margin:0;font-size:20px;color:#e6f8ff}
+.role{margin-top:6px;color:var(--muted);font-size:13px}
+.contact {
+    margin-top:14px;
+    display:flex;flex-direction:column;gap:8px;
+    font-size:13px;color:var(--muted);
+}
+.contact a{color:var(--accent);text-decoration:none;font-weight:600}
+.pill {display:inline-block;padding:6px 10px;border-radius:999px;background:var(--glass);color:var(--accent);font-weight:600;font-size:12px;border:1px solid rgba(100,255,218,0.06)}
+.skills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.card-section{
+    margin-top:18px;padding-top:12px;border-top:1px dashed rgba(255,255,255,0.03)
+}
+.card-section h3{margin:0 0 8px 0;font-size:14px;color:var(--accent)}
+ul{margin:0;padding:0;list-style:none;color:var(--muted);font-size:14px}
+li{margin:6px 0}
+
+/* --- 4. Main Content (Right Column) Styles --- */
+main{
+    display:flex;flex-direction:column;gap:36px;
+}
+main h2{color:var(--accent);margin:0 0 12px 0} /* Styling for main section titles */
+
+/* Project Grid */
+.grid{
+    display:grid;
+    gap:14px;
+    grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+}
+.project{
+    background: linear-gradient(180deg, rgba(255,255,255,0.016), rgba(255,255,255,0.01));
+    border-radius:12px;padding:16px;
+    transform-style:preserve-3d;
+    transition: transform .35s cubic-bezier(.2,.9,.2,1), box-shadow .25s;
+    box-shadow: 0 8px 24px rgba(2,6,23,0.5);
+    border: 1px solid rgba(255,255,255,0.02);
+}
+.project h4{margin:0 0 8px 0;color:#e9fbff}
+.project p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+.project .links{margin-top:10px}
+.project a{color:var(--accent);text-decoration:none;font-weight:600;font-size:13px;margin-right:12px}
+
+/* Experience and Education cards */
+.exp{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.02);
+}
+.exp .item-meta{color:var(--muted);font-size:13px;margin-bottom:8px}
+
+/* Certificates */
+.cert-list{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.cert{background:var(--glass-2);padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);font-size:13px;color:var(--muted)}
+.cert a{color:var(--accent);text-decoration:none;font-weight:600}
+
+/* Utility Classes */
+.tilt {
+    transform-origin: center;
+    will-change: transform;
+    perspective:900px;
+}
+.btn{
+    display:inline-block;padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);
+    background:transparent;color:var(--accent);text-decoration:none;font-weight:700;font-size:13px
+}
+
+/* Responsive Styles */
+@media (max-width:980px){
+    .wrap{grid-template-columns:1fr; padding-bottom:30px}
+    .profile-card{order:2}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+    <!-- 
+        ========================================
+        1. LEFT COLUMN: PROFILE AND CORE INFO 
+        ========================================
+    -->
+    <aside class="profile-card tilt" id="profileCard">
+        
+        <!-- HEADER -->
+        <div class="profile-top">
+            <div class="avatar" id="avatar">
+                <!-- Use initials 'MS' or replace with <img src="path/to/photo.jpg" alt="Mohsin"> if you add a photo -->
+                MS
+            </div>
+            <div>
+                <h1>Mohsin Sheraz</h1>
+                <div class="role">Data Scientist | MS Data Science (Student)</div>
+                <div class="role muted" style="margin-top:8px;font-size:13px">Islamabad, Pakistan</div>
+            </div>
+        </div>
+
+        <!-- CONTACT & QUICK LINKS -->
+        <div class="contact">
+            <div><span class="pill">Decision Sciences • EDA • ML</span></div>
+            <div style="display:flex;gap:8px;margin-top:6px">
+                <a class="btn" href="https://github.com/mohsinbhatti142" target="_blank">GitHub</a>
+                <a class="btn" href="https://www.linkedin.com/in/mohsin-sheraz-142nb/" target="_blank">LinkedIn</a>
+            </div>
+            <div style="margin-top:8px;font-size:13px;color:var(--muted)">📧 <a href="mailto:mohsinsherazbhatti142@gmail.com" style="color:var(--accent)">mohsinsherazbhatti142@gmail.com</a></div>
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="card-section">
+            <h3>Summary</h3>
+            <p class="muted" style="font-size:14px;line-height:1.45">
+                BSc Math graduate expanding into Python, Data Science & ML. Passionate about AI, agentic systems and continuous learning. Open for internships & collaborations.
+            </p>
+        </div>
+
+        <!-- TOP SKILLS -->
+        <div class="card-section">
+            <h3>Top Skills</h3>
+            <div class="skills">
+                <span class="pill">Decision Sciences</span>
+                <span class="pill">Program Creation</span>
+                <span class="pill">Exploratory Data Analysis</span>
+            </div>
+        </div>
+
+        <!-- EDUCATION -->
+        <div class="card-section">
+            <h3>Education</h3>
+            <ul>
+                <li>MS Data Science — Shifa Tameer-e-Millat University (2024–2026)</li>
+                <li>BS Mathematics — University of Sargodha (2015–2019)</li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- 
+        ========================================
+        2. RIGHT COLUMN: MAIN CONTENT SECTIONS 
+        Sequence: Experience -> Projects -> Certifications
+        ========================================
+    -->
+    <main>
+        
+        <!-- 2.1. PROFESSIONAL EXPERIENCE -->
+        <section aria-labelledby="experience-heading">
+             <h2 id="experience-heading">Professional Experience</h2>
+            <div class="exp">
+                <div class="item-meta" style="font-weight:600">Machine Learning Intern — Elevvo Pathways (Sep 2025 - Oct 2025)</div>
+                <p class="muted">Worked on preprocessing, feature engineering, model building & evaluation. Gained hands-on ML experience with real data.</p>
+                <div style="height:12px"></div>
+                <div class="item-meta" style="font-weight:600">Intern — SW Sugar Mills (Sep 2021 - Mar 2022)</div>
+                <p class="muted">Support role in operations & data-related tasks (Sargodha).</p>
+            </div>
+        </section>
+        
+        <!-- 2.2. PROJECTS -->
+        <section aria-labelledby="projects-heading">
+            <h2 id="projects-heading">Projects & Work</h2>
+            <div class="grid">
+                <article class="project tilt" data-link="https://github.com/mohsinbhatti142/object_detection">
+                    <h4>Object Detection</h4>
+                    <p>Computer vision project: dataset annotation, model training, and inference pipeline for object detection tasks.</p>
+                    <div class="links">
+                        <a href="https://github.com/mohsinbhatti142/object_detection" target="_blank">GitHub</a>
+                    </div>
+                </article>
+
+                <article class="project tilt" data-link="https://github.com/mohsinbhatti142/customer-churn-prediction">
+                    <h4>Customer Churn Prediction</h4>
+                    <p>Data cleaning, feature engineering and ML pipeline to predict churn using classical models and evaluation metrics.</p>
+                    <div class="links">
+                        <a href="https://github.com/mohsinbhatti142/customer-churn-prediction" target="_blank">GitHub</a>
+                    </div>
+                </article>
+
+                <article class="project tilt" data-link="https://github.com/mohsinbhatti142/Elevvo-Internship">
+                    <h4>Elevvo Internship Tasks</h4>
+                    <p>4 tasks completed: end-to-end ML tasks during internship: preprocessing, modeling, and analysis.</p>
+                    <div class="links">
+                        <a href="https://github.com/mohsinbhatti142/Elevvo-Internship" target="_blank">GitHub</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 2.3. CERTIFICATIONS -->
+        <section aria-labelledby="certifications-heading">
+            <h2 id="certifications-heading">Certifications</h2>
+            <div class="cert-list">
+                <div class="cert"><a href="https://coursera.org/share/eba729d26208ed48a9701c6104936384" target="_blank">Python for Data Science & AI (Coursera)</a></div>
+                <div class="cert"><a href="https://www.credly.com/badges/30e32c26-119a-4e48-91f7-5261e546881e/public_url" target="_blank">Credly Badge - IBM Data Science</a></div>
+                <div class="cert"><a href="https://coursera.org/share/ed89a56e928ee8aeb46bb55470c9bb81" target="_blank">Deloitte / JPMorgan Simulations</a></div>
+            </div>
+        </section>
+        
+        <!-- 2.4. CONTACT & FOOTER LINKS (Final Section) -->
+        <section class="exp" style="text-align:center" aria-labelledby="contact-heading">
+             <h3 id="contact-heading">Connect with Mohsin</h3>
+             <div style="margin-top:10px">
+                <a class="btn" href="https://github.com/mohsinbhatti142" target="_blank">GitHub</a>
+                <a class="btn" href="https://www.linkedin.com/in/mohsin-sheraz-142nb/" target="_blank">LinkedIn</a>
+                <a class="btn" href="mailto:mohsinsherazbhatti142@gmail.com">Email</a>
+             </div>
+        </section>
+
+        <footer>© 2025 Mohsin Sheraz • Built with HTML/CSS • Hosted on GitHub Pages</footer>
+    </main>
+</div>
+
+<!-- 
+    ========================================
+    3. JAVASCRIPT: 3D TILT INTERACTION 
+    (Kept exactly as you provided it, as it's excellent)
+    ========================================
+-->
+<script>
+(function(){
+    // Configuration for the 3D tilt effect
+    const strength = 12;
+    const speed = 200;
+    const elements = document.querySelectorAll('.tilt');
+
+    function handleMove(e, el){
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width/2;
+        const cy = rect.top + rect.height/2;
+        // Calculate tilt based on mouse position relative to the center of the element
+        const x = (e.clientX - cx) / (rect.width/2);
+        const y = (e.clientY - cy) / (rect.height/2);
+        const rx = (-y * strength).toFixed(2);
+        const ry = ( x * strength).toFixed(2);
+
+        el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+        el.style.transition = `transform ${speed}ms cubic-bezier(.2,.9,.2,1)`;
+        // Update shadow for a lifted look
+        el.style.boxShadow = `0 ${10 + Math.abs(y*18)}px ${24 + Math.abs(x*30)}px rgba(2,6,23,0.55)`;
+    }
+
+    function handleLeave(el){
+        // Reset transform and shadow when the mouse leaves
+        el.style.transform = 'none';
+        el.style.transition = `transform ${speed}ms cubic-bezier(.2,.9,.2,1)`;
+        el.style.boxShadow = `0 8px 24px rgba(2,6,23,0.5)`;
+    }
+
+    elements.forEach(el=>{
+        el.addEventListener('mousemove', e => handleMove(e, el));
+        el.addEventListener('mouseenter', e => handleMove(e, el));
+        el.addEventListener('mouseleave', () => handleLeave(el));
+        
+        // Make project cards clickable for mobile/desktop interaction
+        const link = el.getAttribute('data-link');
+        if(link){
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', ()=> window.open(link, '_blank'));
+        }
+    });
+
+    // Optional: Add device orientation tilt for mobile devices
+    if(window.DeviceOrientationEvent){
+        window.addEventListener('deviceorientation', function(e){
+            const x = e.beta || 0;
+            const y = e.gamma || 0;
+            const rx = (x/8).toFixed(2);
+            const ry = (y/8).toFixed(2);
+            document.body.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+            document.body.style.transition = 'transform 800ms ease';
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
