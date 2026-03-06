@@ -124,7 +124,7 @@
         }
         
         .btn {
-            padding: 16px 40px;
+            padding: 14px 35px;
             border-radius: 50px;
             font-weight: 600;
             text-decoration: none;
@@ -153,7 +153,7 @@
         .section {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 150px 20px;
+            padding: 120px 20px;
             position: relative;
         }
         
@@ -166,7 +166,6 @@
             opacity: 0;
         }
 
-        /* Stats Section Styling from Pic */
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -238,6 +237,7 @@
             position: relative;
             opacity: 0;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .project-number {
@@ -269,6 +269,18 @@
             margin-bottom: 40px;
             position: relative;
             opacity: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -59px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent);
         }
 
         .contact-section {
@@ -344,7 +356,7 @@
                 </div>
                 <div class="card">
                     <h3>💡 Expertise</h3>
-                    <p>Specialized in Decision Sciences, EDA, and Deep Learning. Focused on building Industry 5.0 frameworks and Agentic AI.</p>
+                    <p>Specialized in Machine Learning, Computer Vision, and Deep Learning. Passionate about LLM optimization and agentic AI systems.</p>
                 </div>
             </div>
         </section>
@@ -354,14 +366,14 @@
             <div class="skills-container">
                 <span class="skill-pill">Python</span>
                 <span class="skill-pill">Machine Learning</span>
-                <span class="skill-pill">Data Science</span>
+                <span class="skill-pill">Deep Learning</span>
+                <span class="skill-pill">LLMs</span>
+                <span class="skill-pill">Computer Vision</span>
+                <span class="skill-pill">Federated Learning</span>
                 <span class="skill-pill">TensorFlow</span>
                 <span class="skill-pill">PyTorch</span>
-                <span class="skill-pill">Pandas</span>
-                <span class="skill-pill">Scikit-learn</span>
-                <span class="skill-pill">Computer Vision</span>
-                <span class="skill-pill">NLP</span>
                 <span class="skill-pill">EDA</span>
+                <span class="skill-pill">Digital Twin</span>
             </div>
         </section>
 
@@ -372,13 +384,25 @@
                     <div class="project-number">01</div>
                     <h4>InsightGenAI</h4>
                     <div style="margin: 10px 0"><span class="tag">LLM</span><span class="tag">AutoML</span></div>
-                    <p>AI SaaS tool for automated EDA and model training with natural language querying.</p>
+                    <p>Production-ready AI SaaS tool for automated EDA and model training using natural language querying.</p>
                 </div>
                 <div class="project-card" onclick="window.open('https://github.com/mohsinbhatti142/object_detection', '_blank')">
                     <div class="project-number">02</div>
                     <h4>Object Detection</h4>
                     <div style="margin: 10px 0"><span class="tag">CV</span><span class="tag">PyTorch</span></div>
-                    <p>Real-time detection pipeline with custom dataset annotation and model training.</p>
+                    <p>Comprehensive computer vision project featuring real-time detection and custom model training.</p>
+                </div>
+                <div class="project-card" onclick="window.open('https://github.com/mohsinbhatti142/customer-churn-prediction', '_blank')">
+                    <div class="project-number">03</div>
+                    <h4>Customer Churn Prediction</h4>
+                    <div style="margin: 10px 0"><span class="tag">ML</span><span class="tag">Pipeline</span></div>
+                    <p>End-to-end ML pipeline with advanced feature engineering to predict customer churn.</p>
+                </div>
+                <div class="project-card" onclick="window.open('https://github.com/mohsinbhatti142/Elevvo-Internship', '_blank')">
+                    <div class="project-number">04</div>
+                    <h4>ML Internship Tasks</h4>
+                    <div style="margin: 10px 0"><span class="tag">Data Science</span><span class="tag">Preprocessing</span></div>
+                    <p>Collection of comprehensive tasks completing during my ML internship, showcasing data modeling skills.</p>
                 </div>
             </div>
         </section>
@@ -390,7 +414,13 @@
                     <p style="color:var(--accent)">Sept 2025 - Oct 2025</p>
                     <h4>Machine Learning Intern</h4>
                     <p><strong>Elevvo Pathways</strong></p>
-                    <p>Handled end-to-end ML workflows, from data cleaning to model deployment.</p>
+                    <p>Focused on data preprocessing, feature engineering, and model building for real-world datasets.</p>
+                </div>
+                <div class="timeline-item">
+                    <p style="color:var(--accent)">Sept 2021 - March 2022</p>
+                    <h4>Operations Intern</h4>
+                    <p><strong>SW Sugar Mills, Sargodha</strong></p>
+                    <p>Provided support in operations and data-related analytical tasks.</p>
                 </div>
             </div>
         </section>
@@ -419,14 +449,14 @@
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
         const geo = new THREE.BufferGeometry();
-        const points = new Float32Array(3000 * 3);
-        for(let i=0; i<9000; i++) points[i] = (Math.random()-0.5)*100;
-        geo.setAttribute('position', new THREE.BufferAttribute(points, 3));
+        const pts = new Float32Array(3000 * 3);
+        for(let i=0; i<9000; i++) pts[i] = (Math.random()-0.5)*100;
+        geo.setAttribute('position', new THREE.BufferAttribute(pts, 3));
         const mesh = new THREE.Points(geo, new THREE.PointsMaterial({size: 0.07, color: 0x64ffda}));
         scene.add(mesh);
 
         const torus = new THREE.Mesh(new THREE.TorusKnotGeometry(4, 1, 100, 16), new THREE.MeshBasicMaterial({color: 0x64ffda, wireframe: true, transparent:true, opacity:0.1}));
-        torus.position.set(10, 0, -20);
+        torus.position.set(15, 0, -20);
         scene.add(torus);
 
         camera.position.z = 25;
@@ -439,16 +469,16 @@
         }
         animate();
 
-        // --- GSAP & STATS COUNTER ---
+        // --- GSAP ---
         gsap.to('#navbar', { y: 0, duration: 1, ease: 'power3.out', delay: 0.2 });
         gsap.to('.hero-title', { opacity: 1, y: 0, duration: 1 });
         gsap.to('.hero-subtitle', { opacity: 1, delay: 0.3 });
         gsap.to('.hero-cta', { opacity: 1, delay: 0.5 });
 
-        // Stats Animation
+        // Correct Stats Animation (dhond ka update kr dya ha)
         gsap.utils.toArray('.stat-box').forEach(box => {
-            const number = box.querySelector('.stat-number');
-            const target = parseInt(number.dataset.target);
+            const num = box.querySelector('.stat-number');
+            const target = parseInt(num.dataset.target);
             
             gsap.to(box, {
                 scrollTrigger: box,
@@ -460,7 +490,7 @@
                     gsap.to(count, {
                         val: target,
                         duration: 2,
-                        onUpdate: () => { number.innerText = Math.floor(count.val); }
+                        onUpdate: () => { num.innerText = Math.floor(count.val); }
                     });
                 }
             });
