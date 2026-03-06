@@ -1,1277 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohsin Sheraz — Data Scientist Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-         :root {
-            --bg: #0a0e17;
-            --card: #0f1724;
-            --muted: #9aa7c7;
-            --accent: #64ffda;
-            --glass: rgba(255, 255, 255, 0.05);
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: #dbe9ff;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        
-        .content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            background: rgba(10, 14, 23, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
-            transform: translateY(-100%);
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #64ffda, #0984e3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            color: var(--muted);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-            position: relative;
-        }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: width 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-        
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            padding: 0 20px;
-        }
-        
-        .hero-title {
-            font-size: clamp(3rem, 8vw, 8rem);
-            font-weight: 800;
-            background: linear-gradient(135deg, #64ffda 0%, #0984e3 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            letter-spacing: -0.02em;
-            opacity: 0;
-        }
-        
-        .hero-subtitle {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            color: var(--muted);
-            margin-bottom: 40px;
-            opacity: 0;
-        }
-        
-        .hero-cta {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            opacity: 0;
-        }
-        
-        .btn {
-            padding: 16px 40px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            font-size: 1.1rem;
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), #0984e3);
-            color: var(--bg);
-            box-shadow: 0 10px 40px rgba(100, 255, 218, 0.3);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 50px rgba(100, 255, 218, 0.4);
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--accent);
-            border: 2px solid var(--accent);
-            backdrop-filter: blur(10px);
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(100, 255, 218, 0.1);
-            transform: translateY(-3px);
-        }
-        
-        .section {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 150px 20px;
-            position: relative;
-        }
-        
-        .section-title {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            margin-bottom: 80px;
-            text-align: center;
-            position: relative;
-            color: var(--accent);
-            opacity: 0;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-        }
-        
-        .about-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 60px;
-        }
-        
-        .card {
-            background: rgba(15, 23, 36, 0.6);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 40px;
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(50px);
-        }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(100, 255, 218, 0.1), transparent);
-            transition: top 0.6s;
-        }
-        
-        .card:hover::before {
-            top: 0;
-        }
-        
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            display: block;
-            filter: drop-shadow(0 0 20px rgba(100, 255, 218, 0.5));
-        }
-        
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #e6f8ff;
-        }
-        
-        .card p {
-            color: var(--muted);
-            line-height: 1.6;
-        }
-        
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            margin: 80px 0;
-        }
-        
-        .stat-box {
-            text-align: center;
-            padding: 30px;
-            background: rgba(15, 23, 36, 0.6);
-            border-radius: 20px;
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-        
-        .stat-label {
-            color: var(--muted);
-            font-size: 1rem;
-        }
-        
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            margin-top: 60px;
-        }
-        
-        .project-card {
-            background: rgba(15, 23, 36, 0.6);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            cursor: pointer;
-            position: relative;
-            opacity: 0;
-            transform: translateX(-100px) rotate(-5deg);
-        }
-        
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--accent), #0984e3);
-            transition: left 0.6s;
-        }
-        
-        .project-card:hover::before {
-            left: 0;
-        }
-        
-        .project-content {
-            padding: 30px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .project-number {
-            position: absolute;
-            top: -20px;
-            right: 20px;
-            font-size: 8rem;
-            font-weight: 800;
-            color: rgba(100, 255, 218, 0.05);
-            z-index: 0;
-        }
-        
-        .project-card h4 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #e9fbff;
-        }
-        
-        .project-card p {
-            color: var(--muted);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        
-        .project-tags {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        
-        .tag {
-            padding: 6px 14px;
-            border-radius: 20px;
-            background: rgba(100, 255, 218, 0.1);
-            color: var(--accent);
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        
-        .project-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: gap 0.3s;
-        }
-        
-        .timeline {
-            position: relative;
-            margin-top: 60px;
-            padding-left: 50px;
-        }
-        
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 0;
-            width: 2px;
-            background: linear-gradient(180deg, var(--accent), transparent);
-        }
-        
-        .timeline-item {
-            margin-bottom: 50px;
-            position: relative;
-            opacity: 0;
-            transform: translateX(-50px);
-        }
-        
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -56px;
-            top: 0;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 20px var(--accent);
-        }
-        
-        .timeline-date {
-            color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-        
-        .timeline-content h4 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: #e9fbff;
-        }
-        
-        .timeline-content p {
-            color: var(--muted);
-            line-height: 1.6;
-        }
-        
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 60px;
-        }
-        
-        .skill-pill {
-            padding: 12px 24px;
-            border-radius: 30px;
-            background: rgba(100, 255, 218, 0.1);
-            border: 1px solid rgba(100, 255, 218, 0.2);
-            color: var(--accent);
-            font-weight: 600;
-            cursor: default;
-            opacity: 0;
-            transform: translateY(50px) rotateX(-90deg);
-        }
-        
-        .skill-pill:hover {
-            background: rgba(100, 255, 218, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(100, 255, 218, 0.3);
-        }
-        
-        .contact-section {
-            text-align: center;
-            padding: 100px 20px;
-            background: rgba(15, 23, 36, 0.4);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            margin-top: 100px;
-            opacity: 0;
-            transform: scale(0.9);
-        }
-        
-        .contact-section h2 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, #64ffda, #0984e3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .contact-links {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 40px;
-        }
-        
-        .scroll-indicator {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-        }
-        
-        .scroll-indicator span {
-            display: block;
-            width: 30px;
-            height: 50px;
-            border: 2px solid var(--accent);
-            border-radius: 25px;
-            position: relative;
-        }
-        
-        .scroll-indicator span::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 10px;
-            background: var(--accent);
-            border-radius: 3px;
-            animation: scroll 2s infinite;
-        }
-        
-        @keyframes scroll {
-            0% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-        }
-        
-        .floating-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.1;
-        }
-        
-        .shape1 {
-            width: 400px;
-            height: 400px;
-            background: var(--accent);
-            top: 20%;
-            left: 10%;
-        }
-        
-        .shape2 {
-            width: 300px;
-            height: 300px;
-            background: #0984e3;
-            bottom: 20%;
-            right: 10%;
-        }
-        
-        .parallax-section {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .parallax-text {
-            font-size: clamp(3rem, 8vw, 8rem);
-            font-weight: 800;
-            text-align: center;
-            background: linear-gradient(135deg, #64ffda, #0984e3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-            .about-grid {
-                grid-template-columns: 1fr;
-            }
-            .timeline {
-                padding-left: 30px;
-            }
-            .timeline-item::before {
-                left: -36px;
-            }
-            .nav-links {
-                display: none;
-            }
-            nav {
-                justify-content: center;
-            }
-        }
-    </style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mohsin Sheraz | Data Scientist</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- GSAP Libraries -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
 </head>
 
 <body>
-    <nav id="navbar">
-        <div class="logo">MS</div>
-        <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
-
-    <div class="floating-shapes">
-        <div class="shape shape1"></div>
-        <div class="shape shape2"></div>
-    </div>
-
-    <div id="canvas-container"></div>
-
-    <div class="content">
-        <section class="hero">
-            <h1 class="hero-title">Mohsin Sheraz</h1>
-            <p class="hero-subtitle">Data Scientist | Machine Learning Engineer | AI Enthusiast</p>
-            <div class="hero-cta">
-                <a href="#projects" class="btn btn-primary">View My Work</a>
-                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
-            </div>
-            <div class="scroll-indicator">
-                <span></span>
-            </div>
-        </section>
-
-        <div class="section">
-            <div class="stats-container">
-                <div class="stat-box">
-                    <div class="stat-number" data-target="3">0</div>
-                    <div class="stat-label">Major Projects</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" data-target="5">0</div>
-                    <div class="stat-label">Certifications</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" data-target="2">0</div>
-                    <div class="stat-label">Years Learning</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" data-target="100">0</div>
-                    <div class="stat-label">% Dedication</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="parallax-section">
-            <div class="parallax-text">INNOVATION</div>
-        </div>
-
-        <section class="section" id="about">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-grid">
-                <div class="card">
-                    <span class="card-icon">🎓</span>
-                    <h3>Education</h3>
-                    <p><strong>MS Data Science</strong><br>Shifa Tameer-e-Millat University<br>2024 - 2026</p>
-                    <p style="margin-top: 15px;"><strong>BS Mathematics</strong><br>University of Sargodha<br>2015 - 2019</p>
-                </div>
-                <div class="card">
-                    <span class="card-icon">💡</span>
-                    <h3>Expertise</h3>
-                    <p>Specialized in Decision Sciences, Exploratory Data Analysis, and Machine Learning. Passionate about creating AI-powered solutions and agentic systems.</p>
-                </div>
-                <div class="card">
-                    <span class="card-icon">🚀</span>
-                    <h3>Goals</h3>
-                    <p>Continuously expanding knowledge in Python, Data Science, and ML. Open for internships, collaborations, and innovative AI projects.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="skills">
-            <h2 class="section-title">Skills & Technologies</h2>
-            <div class="skills-container">
-                <span class="skill-pill">Python</span>
-                <span class="skill-pill">Machine Learning</span>
-                <span class="skill-pill">Data Science</span>
-                <span class="skill-pill">TensorFlow</span>
-                <span class="skill-pill">PyTorch</span>
-                <span class="skill-pill">Pandas</span>
-                <span class="skill-pill">NumPy</span>
-                <span class="skill-pill">Scikit-learn</span>
-                <span class="skill-pill">Computer Vision</span>
-                <span class="skill-pill">EDA</span>
-                <span class="skill-pill">Feature Engineering</span>
-                <span class="skill-pill">Model Evaluation</span>
-                <span class="skill-pill">Deep Learning</span>
-                <span class="skill-pill">Decision Sciences</span>
-            </div>
-        </section>
-
-        <div class="parallax-section">
-            <div class="parallax-text">DATA DRIVEN</div>
-        </div>
-
-        <section class="section" id="projects">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-grid">
-        
-        <!-- Project 1 -->
-                <div class="project-card" onclick="window.open('https://github.com/mohsinbhatti142/object_detection', '_blank')">
-                    <div class="project-number">01</div>
-                    <div class="project-content">
-                        <h4>Object Detection System</h4>
-                        <div class="project-tags">
-                            <span class="tag">Computer Vision</span>
-                            <span class="tag">Deep Learning</span>
-                            <span class="tag">Python</span>
-                        </div>
-                        <p>Comprehensive computer vision project featuring dataset annotation, model training, and complete inference pipeline for real-time object detection tasks.</p>
-                        <a href="https://github.com/mohsinbhatti142/object_detection" class="project-link" target="_blank">View Project →</a>
-                    </div>
-                </div>
-
-        <!-- Project 2 -->
-                <div class="project-card" onclick="window.open('https://github.com/mohsinbhatti142/customer-churn-prediction', '_blank')">
-                    <div class="project-number">02</div>
-                    <div class="project-content">
-                        <h4>Customer Churn Prediction</h4>
-                        <div class="project-tags">
-                            <span class="tag">ML Pipeline</span>
-                            <span class="tag">Feature Engineering</span>
-                            <span class="tag">Analytics</span>
-                        </div>
-                        <p>End-to-end ML pipeline with advanced data cleaning, feature engineering, and model evaluation to predict customer churn with high accuracy.</p>
-                        <a href="https://github.com/mohsinbhatti142/customer-churn-prediction" class="project-link" target="_blank">View Project →</a>
-                    </div>
-                </div>
-
-        <!-- Project 3 -->
-                <div class="project-card" onclick="window.open('https://github.com/mohsinbhatti142/Elevvo-Internship', '_blank')">
-                    <div class="project-number">03</div>
-                    <div class="project-content">
-                        <h4>ML Internship Tasks</h4>
-                        <div class="project-tags">
-                            <span class="tag">Data Science</span>
-                            <span class="tag">ML Models</span>
-                            <span class="tag">Analysis</span>
-                        </div>
-                        <p>Collection of 4 comprehensive ML tasks completed during Elevvo internship, showcasing preprocessing, modeling, and analytical skills.</p>
-                        <a href="https://github.com/mohsinbhatti142/Elevvo-Internship" class="project-link" target="_blank">View Project →</a>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-        <section class="section" id="experience">
-            <h2 class="section-title">Experience</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">September 2025 - October 2025</div>
-                    <div class="timeline-content">
-                        <h4>Machine Learning Intern</h4>
-                        <p><strong>Elevvo Pathways</strong></p>
-                        <p>Worked extensively on data preprocessing, feature engineering, model building, and evaluation. Gained hands-on experience with real-world datasets and ML workflows.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">September 2021 - March 2022</div>
-                    <div class="timeline-content">
-                        <h4>Operations Intern</h4>
-                        <p><strong>SW Sugar Mills, Sargodha</strong></p>
-                        <p>Provided support in operations and data-related tasks, developing practical problem-solving and analytical skills.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="contact-section" id="contact">
-                <h2>Let's Build Something Amazing</h2>
-                <p style="color: var(--muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto;">I'm always open to new opportunities, collaborations, and interesting projects. Let's connect!</p>
-                <div class="contact-links">
-                    <a href="https://github.com/mohsinbhatti142" class="btn btn-primary" target="_blank">GitHub</a>
-                    <a href="https://www.linkedin.com/in/mohsin-sheraz-142nb/" class="btn btn-primary" target="_blank">LinkedIn</a>
-                    <a href="mailto:mohsinsherazbhatti142@gmail.com" class="btn btn-secondary">Email Me</a>
-                </div>
-                <p style="margin-top: 60px; color: var(--muted); font-size: 0.9rem;">© 2025 Mohsin Sheraz • Built with GSAP, Three.js & passion</p>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        // Register GSAP ScrollTrigger
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Three.js Scene Setup
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true
-        });
-
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-        // Particle System
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 3000;
-        const posArray = new Float32Array(particlesCount * 3);
-        const colorsArray = new Float32Array(particlesCount * 3);
-
-        for (let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 100;
-            if (i % 3 === 0) {
-                colorsArray[i] = 0.39;
-            } else if (i % 3 === 1) {
-                colorsArray[i] = Math.random() * 0.5 + 0.5;
-            } else {
-                colorsArray[i] = Math.random() * 0.3 + 0.7;
-            }
-        }
-
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorsArray, 3));
-
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.08,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
-
-        // Animated Torus Knot
-        const torusKnotGeo = new THREE.TorusKnotGeometry(3, 1, 200, 32);
-        const torusKnotMat = new THREE.MeshBasicMaterial({
-            color: 0x64ffda,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.15
-        });
-        const torusKnot = new THREE.Mesh(torusKnotGeo, torusKnotMat);
-        torusKnot.position.set(15, 0, -20);
-        scene.add(torusKnot);
-
-        // Icosahedron
-        const icoGeo = new THREE.IcosahedronGeometry(4, 0);
-        const icoMat = new THREE.MeshBasicMaterial({
-            color: 0x0984e3,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.2
-        });
-        const icosahedron = new THREE.Mesh(icoGeo, icoMat);
-        icosahedron.position.set(-15, 5, -25);
-        scene.add(icosahedron);
-
-        camera.position.z = 20;
-
-        // Mouse movement
-        let mouseX = 0;
-        let mouseY = 0;
-
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-        });
-
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-
-            particlesMesh.rotation.y += 0.0005;
-            particlesMesh.rotation.x += 0.0002;
-
-            torusKnot.rotation.x += 0.005;
-            torusKnot.rotation.y += 0.008;
-            icosahedron.rotation.x += 0.003;
-            icosahedron.rotation.y += 0.006;
-
-            camera.position.x += (mouseX * 2 - camera.position.x) * 0.02;
-            camera.position.y += (mouseY * 2 - camera.position.y) * 0.02;
-            camera.lookAt(scene.position);
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        // GSAP Animations
-
-        // Navbar slide down
-        gsap.to('#navbar', {
-            y: 0,
-            duration: 1,
-            ease: 'power3.out',
-            delay: 0.5
-        });
-
-        // Hero animations
-        gsap.to('.hero-title', {
-            opacity: 1,
-            y: 0,
-            duration: 1.2,
-            ease: 'power4.out'
-        });
-
-        gsap.to('.hero-subtitle', {
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
-            delay: 0.3
-        });
-
-        gsap.to('.hero-cta', {
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
-            delay: 0.5
-        });
-
-        gsap.to('.scroll-indicator', {
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
-            delay: 0.7
-        });
-
-        // Section titles
-        gsap.utils.toArray('.section-title').forEach(title => {
-            gsap.to(title, {
-                scrollTrigger: {
-                    trigger: title,
-                    start: 'top 80%',
-                    toggleActions: 'play none none reverse'
-                },
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: 'power3.out'
-            });
-        });
-
-        // Stats counter animation
-        gsap.utils.toArray('.stat-box').forEach((box, i) => {
-            gsap.to(box, {
-                scrollTrigger: {
-                    trigger: box,
-                    start: 'top 80%',
-                    toggleActions: 'play none none reverse'
-                },
-                opacity: 1,
-                scale: 1,
-                duration: 0.6,
-                delay: i * 0.1,
-                ease: 'back.out(1.7)'
-            });
-
-            const number = box.querySelector('.stat-number');
-            const target = parseInt(number.dataset.target);
-
-            ScrollTrigger.create({
-                trigger: box,
-                start: 'top 80%',
-                onEnter: () => {
-                    gsap.to(number, {
-                        innerHTML: target,
-                        duration: 2,
-                        snap: {
-                            innerHTML: 1
-                        },
-                        ease: 'power2.out'
-                    });
-                }
-            });
-        });
-
-        // Cards stagger animation
-        gsap.utils.toArray('.card').forEach((card, i) => {
-            gsap.to(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: 'top 85%',
-                    toggleActions: 'play none none reverse'
-                },
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                delay: i * 0.2,
-                ease: 'power3.out'
-            });
-        });
-
-        // Project cards
-        gsap.utils.toArray('.project-card').forEach((card, i) => {
-            gsap.to(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: 'top 85%',
-                    toggleActions: 'play none none reverse'
-                },
-                opacity: 1,
-                x: 0,
-                rotation: 0,
-                duration: 1,
-                delay: i * 0.15,
-                ease: 'power3.out'
-            });
-        });
-
-        // Timeline animation
-        gsap.to('.timeline::before', {
-            scrollTrigger: {
-                trigger: '.timeline',
-                start: 'top 70%',
-                end: 'bottom 30%',
-                scrub: 1
-            },
-            height: '100%',
-            duration: 1
-        });
-
-        gsap.utils.toArray('.timeline-item').forEach((item, i) => {
-            gsap.to(item, {
-                scrollTrigger: {
-                    trigger: item,
-                    start: 'top 85%',
-                    toggleActions: 'play none none reverse'
-                },
-                opacity: 1,
-                x: 0,
-                duration: 0.8,
-                delay: i * 0.1,
-                ease: 'power3.out'
-            });
-        });
-
-        // Skills pills
-        gsap.utils.toArray('.skill-pill').forEach((pill, i) => {
-            gsap.to(pill, {
-                scrollTrigger: {
-                    trigger: pill,
-                    start: 'top 90%',
-                    toggleActions: 'play none none reverse'
-                },
-                opacity: 1,
-                y: 0,
-                rotateX: 0,
-                duration: 0.6,
-                delay: i * 0.05,
-                ease: 'back.out(1.7)'
-            });
-        });
-
-        // Parallax text
-        gsap.utils.toArray('.parallax-text').forEach(text => {
-            gsap.to(text, {
-                scrollTrigger: {
-                    trigger: text,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: 1
-                },
-                opacity: 0.3,
-                scale: 1.2,
-                ease: 'none'
-            });
-
-            gsap.to(text, {
-                scrollTrigger: {
-                    trigger: text,
-                    start: 'top 80%',
-                    toggleActions: 'play none none reverse'
-                },
-                opacity: 0.3,
-                duration: 1
-            });
-        });
-
-        // Contact section
-        gsap.to('.contact-section', {
-            scrollTrigger: {
-                trigger: '.contact-section',
-                start: 'top 80%',
-                toggleActions: 'play none none reverse'
-            },
-            opacity: 1,
-            scale: 1,
-            duration: 1,
-            ease: 'power3.out'
-        });
-
-        // Floating shapes
-        gsap.to('.shape1', {
-            x: 100,
-            y: -100,
-            duration: 20,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut'
-        });
-
-        gsap.to('.shape2', {
-            x: -100,
-            y: 100,
-            duration: 15,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut'
-        });
-
-        // Parallax 3D objects on scroll
-        ScrollTrigger.create({
-            start: 0,
-            end: 'max',
-            onUpdate: (self) => {
-                const progress = self.progress;
-                torusKnot.position.y = progress * 10 - 5;
-                icosahedron.position.y = progress * -8 + 4;
-                particlesMesh.rotation.z = progress * Math.PI * 2;
-            }
-        });
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    gsap.to(window, {
-                        duration: 1.5,
-                        scrollTo: {
-                            y: target,
-                            offsetY: 80
-                        },
-                        ease: 'power3.inOut'
-                    });
-                }
-            });
-        });
-
-        // Magnetic buttons
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('mouseenter', () => {
-                gsap.to(btn, {
-                    scale: 1.05,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            });
-
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, {
-                    scale: 1,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            });
-
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-
-                gsap.to(btn, {
-                    x: x * 0.3,
-                    y: y * 0.3,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            });
-
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, {
-                    x: 0,
-                    y: 0,
-                    duration: 0.5,
-                    ease: 'elastic.out(1, 0.5)'
-                });
-            });
-        });
-
-        // Project cards hover
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                gsap.to(card, {
-                    scale: 1.02,
-                    y: -10,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            });
-
-            card.addEventListener('mouseleave', () => {
-                gsap.to(card, {
-                    scale: 1,
-                    y: 0,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            });
-        });
-
-        // Window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            ScrollTrigger.refresh();
-        });
-
-        // Cursor trail
-        const cursorTrail = [];
-        const trailLength = 20;
-
-        for (let i = 0; i < trailLength; i++) {
-            const dot = document.createElement('div');
-            dot.style.position = 'fixed';
-            dot.style.width = '4px';
-            dot.style.height = '4px';
-            dot.style.borderRadius = '50%';
-            dot.style.background = `rgba(100, 255, 218, ${1 - i / trailLength})`;
-            dot.style.pointerEvents = 'none';
-            dot.style.zIndex = '9999';
-            dot.style.transition = 'transform 0.1s ease-out';
-            document.body.appendChild(dot);
-            cursorTrail.push({
-                element: dot,
-                x: 0,
-                y: 0
-            });
-        }
-
-        let mousePos = {
-            x: 0,
-            y: 0
-        };
-
-        document.addEventListener('mousemove', (e) => {
-            mousePos.x = e.clientX;
-            mousePos.y = e.clientY;
-        });
-
-        function updateCursorTrail() {
-            cursorTrail.forEach((dot, index) => {
-                const target = index === 0 ? mousePos : cursorTrail[index - 1];
-                dot.x += (target.x - dot.x) * 0.2;
-                dot.y += (target.y - dot.y) * 0.2;
-                dot.element.style.transform = `translate(${dot.x}px, ${dot.y}px)`;
-            });
-            requestAnimationFrame(updateCursorTrail);
-        }
-
-        updateCursorTrail();
-    </script>
+
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+<h1>Mohsin Sheraz</h1>
+
+<p>Data Scientist | Machine Learning | AI Engineer</p>
+
+<div class="hero-buttons">
+
+<a href="#projects" class="btn btn-primary">
+View My Work
+</a>
+
+<a href="#contact" class="btn btn-secondary">
+Get In Touch
+</a>
+
+<a href="https://github.com/mohsinbhatti142"
+class="btn btn-secondary"
+target="_blank">
+GitHub
+</a>
+
+<a href="https://huggingface.co"
+class="btn btn-secondary"
+target="_blank">
+HuggingFace
+</a>
+
+</div>
+
+</section>
+
+
+
+<!-- PROJECTS SECTION -->
+
+<section id="projects" class="projects">
+
+<h2 class="section-title">Projects</h2>
+
+<div class="projects-grid">
+
+
+<!-- PROJECT 1 -->
+
+<div class="project-card"
+onclick="window.open('https://github.com/mohsinbhatti142', '_blank')">
+
+<div class="project-number">01</div>
+
+<div class="project-content">
+
+<h4>Machine Learning Pipeline</h4>
+
+<div class="project-tags">
+
+<span class="tag">Python</span>
+<span class="tag">Scikit-learn</span>
+<span class="tag">ML</span>
+
+</div>
+
+<p>
+End-to-end machine learning pipeline including preprocessing,
+feature engineering, model training and evaluation.
+</p>
+
+<a href="https://github.com/mohsinbhatti142"
+class="project-link"
+target="_blank">
+View Project →
+</a>
+
+</div>
+</div>
+
+
+
+<!-- PROJECT 2 -->
+
+<div class="project-card"
+onclick="window.open('https://github.com/mohsinbhatti142', '_blank')">
+
+<div class="project-number">02</div>
+
+<div class="project-content">
+
+<h4>Data Analysis Dashboard</h4>
+
+<div class="project-tags">
+
+<span class="tag">Python</span>
+<span class="tag">Pandas</span>
+<span class="tag">Visualization</span>
+
+</div>
+
+<p>
+Interactive dashboard for exploring datasets and
+generating visual insights from structured data.
+</p>
+
+<a href="https://github.com/mohsinbhatti142"
+class="project-link"
+target="_blank">
+View Project →
+</a>
+
+</div>
+</div>
+
+
+
+<!-- PROJECT 3 -->
+
+<div class="project-card"
+onclick="window.open('https://github.com/mohsinbhatti142', '_blank')">
+
+<div class="project-number">03</div>
+
+<div class="project-content">
+
+<h4>Deep Learning Model</h4>
+
+<div class="project-tags">
+
+<span class="tag">PyTorch</span>
+<span class="tag">Neural Networks</span>
+<span class="tag">AI</span>
+
+</div>
+
+<p>
+Deep learning model for predictive analytics
+using neural network architectures.
+</p>
+
+<a href="https://github.com/mohsinbhatti142"
+class="project-link"
+target="_blank">
+View Project →
+</a>
+
+</div>
+</div>
+
+
+
+<!-- PROJECT 4  (InsightGenAI) -->
+
+<div class="project-card"
+onclick="window.open('https://mohsinbhatti-insightgenai.hf.space', '_blank')">
+
+<div class="project-number">04</div>
+
+<div class="project-content">
+
+<h4>InsightGenAI – LLM Powered Data Analyst</h4>
+
+<div class="project-tags">
+
+<span class="tag">AutoML</span>
+<span class="tag">LLM</span>
+<span class="tag">Streamlit</span>
+<span class="tag">Explainable AI</span>
+
+</div>
+
+<p>
+AI-powered AutoML system that transforms CSV datasets
+into insights using automated EDA, model training,
+SHAP explainability and natural language queries.
+</p>
+
+<a href="https://mohsinbhatti-insightgenai.hf.space"
+class="project-link"
+target="_blank">
+Live Demo →
+</a>
+
+</div>
+</div>
+
+
+
+</div>
+
+</section>
+
+
+
+<!-- CONTACT SECTION -->
+
+<section id="contact">
+
+<h2>Contact</h2>
+
+<p>Email: mohsin@example.com</p>
+
+<p>GitHub: github.com/mohsinbhatti142</p>
+
+</section>
+
+
+
 </body>
-
-
 </html>
-
