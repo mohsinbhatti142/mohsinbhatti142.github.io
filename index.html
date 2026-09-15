@@ -1,511 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohsin Sheraz — Data Scientist Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-         :root {
-            --bg: #0a0e17;
-            --card: #0f1724;
-            --muted: #9aa7c7;
-            --accent: #64ffda;
-            --glass: rgba(255, 255, 255, 0.05);
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: #dbe9ff;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        
-        .content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            background: rgba(10, 14, 23, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
-            transform: translateY(-100%);
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #64ffda, #0984e3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            color: var(--muted);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-            position: relative;
-        }
-        
-        .nav-links a:hover { color: var(--accent); }
-        
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            padding: 0 20px;
-        }
-        
-        .hero-title {
-            font-size: clamp(3rem, 8vw, 8rem);
-            font-weight: 800;
-            background: linear-gradient(135deg, #64ffda 0%, #0984e3 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-            opacity: 0;
-        }
-        
-        .hero-subtitle {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            color: var(--muted);
-            margin-bottom: 40px;
-            opacity: 0;
-        }
-        
-        .hero-cta {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            opacity: 0;
-        }
-        
-        .btn {
-            padding: 14px 35px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            font-size: 1.1rem;
-            display: inline-block;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), #0984e3);
-            color: var(--bg);
-            box-shadow: 0 10px 40px rgba(100, 255, 218, 0.3);
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--accent);
-            border: 2px solid var(--accent);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn:hover { transform: translateY(-3px); }
-        
-        .section {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 120px 20px;
-            position: relative;
-        }
-        
-        .section-title {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            margin-bottom: 80px;
-            text-align: center;
-            color: var(--accent);
-            opacity: 0;
-        }
-
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            margin: 80px 0;
-        }
-        
-        .stat-box {
-            text-align: center;
-            padding: 40px;
-            background: rgba(15, 23, 36, 0.6);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        
-        .stat-number {
-            font-size: 4rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-        
-        .stat-label { color: var(--muted); font-size: 1.1rem; }
-        
-        .card {
-            background: rgba(15, 23, 36, 0.6);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 40px;
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            opacity: 0;
-            transform: translateY(50px);
-        }
-
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 60px;
-        }
-        
-        .skill-pill {
-            padding: 12px 24px;
-            border-radius: 30px;
-            background: rgba(100, 255, 218, 0.1);
-            border: 1px solid rgba(100, 255, 218, 0.2);
-            color: var(--accent);
-            font-weight: 600;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-        }
-        
-        .project-card {
-            background: rgba(15, 23, 36, 0.6);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            position: relative;
-            opacity: 0;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .project-number {
-            position: absolute;
-            top: -10px;
-            right: 10px;
-            font-size: 6rem;
-            font-weight: 900;
-            color: rgba(100, 255, 218, 0.03);
-            z-index: 0;
-        }
-
-        .tag {
-            padding: 5px 12px;
-            background: rgba(100, 255, 218, 0.1);
-            color: var(--accent);
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin-right: 5px;
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 50px;
-            border-left: 2px solid rgba(100, 255, 218, 0.2);
-        }
-
-        .timeline-item {
-            margin-bottom: 40px;
-            position: relative;
-            opacity: 0;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -59px;
-            top: 5px;
-            width: 16px;
-            height: 16px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 15px var(--accent);
-        }
-
-        .contact-section {
-            text-align: center;
-            padding: 80px 20px;
-            background: rgba(15, 23, 36, 0.5);
-            border-radius: 30px;
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            opacity: 0;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero-cta { flex-direction: column; }
-            .btn { width: 100%; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mohsin Sheraz — Machine Learning Engineer, Computer Vision & Edge AI">
+  <title>Mohsin Sheraz | ML Engineer • Computer Vision • Edge AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <nav id="navbar">
-        <div class="logo">MS</div>
-        <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<header class="nav">
+  <a class="brand" href="#home">MS<span>.</span></a>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#research">Research</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a class="nav-btn" href="https://github.com/mohsinbhatti142" target="_blank">GitHub ↗</a>
+</header>
 
-    <div id="canvas-container"></div>
-
-    <div class="content">
-        <section class="hero">
-            <h1 class="hero-title">Mohsin Sheraz</h1>
-            <p class="hero-subtitle">Data Scientist | Machine Learning Engineer | AI Enthusiast</p>
-            <div class="hero-cta">
-                <a href="#projects" class="btn btn-primary">View My Work</a>
-                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
-                <a href="https://github.com/mohsinbhatti142" class="btn btn-secondary" target="_blank">GitHub</a>
-                <a href="https://huggingface.co/mohsinbhatti" class="btn btn-secondary" target="_blank">HuggingFace</a>
-            </div>
-        </section>
-
-        <div class="section">
-            <div class="stats-container">
-                <div class="stat-box">
-                    <div class="stat-number" data-target="4">0</div>
-                    <div class="stat-label">Major Projects</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" data-target="5">0</div>
-                    <div class="stat-label">Certifications</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" data-target="2">0</div>
-                    <div class="stat-label">Years Learning</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" data-target="100">0</div>
-                    <div class="stat-label">% Dedication</div>
-                </div>
-            </div>
-        </div>
-
-        <section class="section" id="about">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-grid">
-                <div class="card">
-                    <h3>🎓 Education</h3>
-                    <p><strong>MS Data Science</strong> (2024 - 2026)<br>Shifa Tameer-e-Millat University</p>
-                    <p style="margin-top:10px"><strong>BS Mathematics</strong> (2015 - 2019)<br>University of Sargodha</p>
-                </div>
-                <div class="card">
-                    <h3>💡 Expertise</h3>
-                    <p>Specialized in Machine Learning, Computer Vision, and Deep Learning. Passionate about LLM optimization and agentic AI systems.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="skills">
-            <h2 class="section-title">Skills & Technologies</h2>
-            <div class="skills-container">
-                <span class="skill-pill">Python</span>
-                <span class="skill-pill">Machine Learning</span>
-                <span class="skill-pill">Deep Learning</span>
-                <span class="skill-pill">LLMs</span>
-                <span class="skill-pill">Computer Vision</span>
-                <span class="skill-pill">Federated Learning</span>
-                <span class="skill-pill">TensorFlow</span>
-                <span class="skill-pill">PyTorch</span>
-                <span class="skill-pill">EDA</span>
-                <span class="skill-pill">Digital Twin</span>
-            </div>
-        </section>
-
-        <section class="section" id="projects">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card" onclick="window.open('https://mohsinbhatti-insightgenai.hf.space', '_blank')">
-                    <div class="project-number">01</div>
-                    <h4>InsightGenAI</h4>
-                    <div style="margin: 10px 0"><span class="tag">LLM</span><span class="tag">AutoML</span></div>
-                    <p>Production-ready AI SaaS tool for automated EDA and model training using natural language querying.</p>
-                </div>
-                <div class="project-card" onclick="window.open('https://github.com/mohsinbhatti142/object_detection', '_blank')">
-                    <div class="project-number">02</div>
-                    <h4>Object Detection</h4>
-                    <div style="margin: 10px 0"><span class="tag">CV</span><span class="tag">PyTorch</span></div>
-                    <p>Comprehensive computer vision project featuring real-time detection and custom model training.</p>
-                </div>
-                <div class="project-card" onclick="window.open('https://github.com/mohsinbhatti142/customer-churn-prediction', '_blank')">
-                    <div class="project-number">03</div>
-                    <h4>Customer Churn Prediction</h4>
-                    <div style="margin: 10px 0"><span class="tag">ML</span><span class="tag">Pipeline</span></div>
-                    <p>End-to-end ML pipeline with advanced feature engineering to predict customer churn.</p>
-                </div>
-                <div class="project-card" onclick="window.open('https://github.com/mohsinbhatti142/Elevvo-Internship', '_blank')">
-                    <div class="project-number">04</div>
-                    <h4>ML Internship Tasks</h4>
-                    <div style="margin: 10px 0"><span class="tag">Data Science</span><span class="tag">Preprocessing</span></div>
-                    <p>Collection of comprehensive tasks completing during my ML internship, showcasing data modeling skills.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="experience">
-            <h2 class="section-title">Experience</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <p style="color:var(--accent)">Sept 2025 - Oct 2025</p>
-                    <h4>Machine Learning Intern</h4>
-                    <p><strong>Elevvo Pathways</strong></p>
-                    <p>Focused on data preprocessing, feature engineering, and model building for real-world datasets.</p>
-                </div>
-                <div class="timeline-item">
-                    <p style="color:var(--accent)">Sept 2021 - March 2022</p>
-                    <h4>Operations Intern</h4>
-                    <p><strong>SW Sugar Mills, Sargodha</strong></p>
-                    <p>Provided support in operations and data-related analytical tasks.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="contact-section" id="contact">
-                <h2>Let's Build Something Amazing</h2>
-                <div class="contact-links" style="margin-top: 30px;">
-                    <a href="mailto:mohsinsherazbhatti142@gmail.com" class="btn btn-primary">Email Me</a>
-                    <a href="https://www.linkedin.com/in/mohsin-sheraz-142nb/" class="btn btn-secondary" target="_blank">LinkedIn</a>
-                    <a href="https://github.com/mohsinbhatti142" class="btn btn-secondary" target="_blank">GitHub</a>
-                </div>
-                <p style="margin-top: 50px; font-size: 0.8rem; color: var(--muted)">© 2026 Mohsin Sheraz • Built with Passion</p>
-            </div>
-        </section>
+<main>
+<section id="home" class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">MACHINE LEARNING ENGINEER · COMPUTER VISION · EDGE AI</p>
+    <h1>Building AI systems that<br><span>work in the real world.</span></h1>
+    <p class="lead">
+      I'm Mohsin Sheraz, an MS Data Science graduate and Machine Learning Engineer based in Islamabad, Pakistan.
+      I build end-to-end computer vision and edge AI systems—from data and model training to TensorRT,
+      NVIDIA Jetson, live CCTV inference, backend services and cloud deployment.
+    </p>
+    <div class="actions">
+      <a class="button primary" href="#projects">View my work</a>
+      <a class="button secondary" href="https://github.com/mohsinbhatti142" target="_blank">GitHub ↗</a>
+      <a class="button secondary" href="https://www.linkedin.com/in/mohsin-sheraz-142nb/" target="_blank">LinkedIn ↗</a>
     </div>
+  </div>
+  <div class="hero-card">
+    <div class="status"><span></span> Currently building at Talkpool Pakistan</div>
+    <div class="terminal">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <pre><code><b>$</b> whoami
 
-    <script>
-        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+Mohsin Sheraz
+ML Engineer / Computer Vision
 
-        // --- THREE.JS ---
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+<b>$</b> current_stack
 
-        const geo = new THREE.BufferGeometry();
-        const pts = new Float32Array(3000 * 3);
-        for(let i=0; i<9000; i++) pts[i] = (Math.random()-0.5)*100;
-        geo.setAttribute('position', new THREE.BufferAttribute(pts, 3));
-        const mesh = new THREE.Points(geo, new THREE.PointsMaterial({size: 0.07, color: 0x64ffda}));
-        scene.add(mesh);
+YOLO · PyTorch · OpenCV
+TensorRT · Jetson Orin Nano
+FastAPI · AWS · Docker
 
-        const torus = new THREE.Mesh(new THREE.TorusKnotGeometry(4, 1, 100, 16), new THREE.MeshBasicMaterial({color: 0x64ffda, wireframe: true, transparent:true, opacity:0.1}));
-        torus.position.set(15, 0, -20);
-        scene.add(torus);
+<b>$</b> focus
 
-        camera.position.z = 25;
+Real-time AI
+Edge deployment
+Industrial Computer Vision</code></pre>
+    </div>
+  </div>
+</section>
 
-        function animate() {
-            requestAnimationFrame(animate);
-            mesh.rotation.y += 0.001;
-            torus.rotation.x += 0.005;
-            renderer.render(scene, camera);
-        }
-        animate();
+<section class="stats">
+  <div><strong>MS</strong><span>Data Science</span></div>
+  <div><strong>CV</strong><span>Computer Vision</span></div>
+  <div><strong>Edge</strong><span>Jetson + TensorRT</span></div>
+  <div><strong>Cloud</strong><span>AWS Deployment</span></div>
+</section>
 
-        // --- GSAP ---
-        gsap.to('#navbar', { y: 0, duration: 1, ease: 'power3.out', delay: 0.2 });
-        gsap.to('.hero-title', { opacity: 1, y: 0, duration: 1 });
-        gsap.to('.hero-subtitle', { opacity: 1, delay: 0.3 });
-        gsap.to('.hero-cta', { opacity: 1, delay: 0.5 });
+<section id="about" class="section two-col">
+  <div>
+    <p class="eyebrow">ABOUT</p>
+    <h2>From datasets to deployed AI.</h2>
+  </div>
+  <div class="content">
+    <p>
+      My work sits at the intersection of machine learning, computer vision and deployment.
+      I enjoy taking an AI idea beyond a notebook and turning it into a usable system.
+    </p>
+    <p>
+      At Talkpool Pakistan, I have worked on a real-time PPE safety detection system covering
+      dataset collection and processing, annotation, model training and evaluation, TensorRT
+      optimization, NVIDIA Jetson Orin Nano deployment, live CCTV/RTSP testing, backend integration,
+      AWS connectivity and a monitoring dashboard.
+    </p>
+    <p>
+      My research background includes Explainable AI, reinforcement learning, predictive maintenance,
+      energy-aware deep learning and edge-deployable models.
+    </p>
+  </div>
+</section>
 
-        // Correct Stats Animation (dhond ka update kr dya ha)
-        gsap.utils.toArray('.stat-box').forEach(box => {
-            const num = box.querySelector('.stat-number');
-            const target = parseInt(num.dataset.target);
-            
-            gsap.to(box, {
-                scrollTrigger: box,
-                opacity: 1,
-                scale: 1,
-                duration: 1,
-                onStart: () => {
-                    let count = { val: 0 };
-                    gsap.to(count, {
-                        val: target,
-                        duration: 2,
-                        onUpdate: () => { num.innerText = Math.floor(count.val); }
-                    });
-                }
-            });
-        });
+<section id="experience" class="section">
+  <p class="eyebrow">EXPERIENCE</p>
+  <h2>What I'm doing now</h2>
+  <div class="timeline">
+    <article class="timeline-item">
+      <div class="time">AUG 2026 — PRESENT</div>
+      <div>
+        <h3>Machine Learning Engineer · Computer Vision & Edge AI</h3>
+        <p class="muted">Talkpool Pakistan · Islamabad</p>
+        <ul>
+          <li>Developing real-time computer vision solutions for industrial safety and monitoring.</li>
+          <li>Built an end-to-end PPE detection workflow from data collection and annotation to model training and deployment.</li>
+          <li>Converted detection models to TensorRT and deployed optimized inference on NVIDIA Jetson Orin Nano.</li>
+          <li>Integrated live CCTV/RTSP streams and tested real-time inference in practical conditions.</li>
+          <li>Connected the application backend with AWS and deployed the web application through AWS Amplify.</li>
+        </ul>
+      </div>
+    </article>
+    <article class="timeline-item">
+      <div class="time">JUN 2026 — JUL 2026</div>
+      <div>
+        <h3>RF Engineer Level III</h3>
+        <p class="muted">Talkpool Pakistan · Islamabad</p>
+        <ul>
+          <li>Worked with cellular network performance data and KPIs across 2G, 3G and 4G.</li>
+          <li>Analyzed and standardized KPI information from different network vendors.</li>
+        </ul>
+      </div>
+    </article>
+    <article class="timeline-item">
+      <div class="time">SEP 2025 — OCT 2025</div>
+      <div>
+        <h3>Machine Learning Intern</h3>
+        <p class="muted">Elevvo Pathways · Remote</p>
+        <ul>
+          <li>Worked on preprocessing, feature engineering, predictive ML models and hyperparameter tuning.</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</section>
 
-        gsap.utils.toArray('.section-title, .card, .project-card, .timeline-item, .skill-pill, .contact-section').forEach(el => {
-            gsap.to(el, { scrollTrigger: el, opacity: 1, y: 0, duration: 1 });
-        });
+<section id="projects" class="section">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">SELECTED PROJECTS</p>
+      <h2>Systems I've built</h2>
+    </div>
+    <a class="text-link" href="https://github.com/mohsinbhatti142" target="_blank">All repositories ↗</a>
+  </div>
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                gsap.to(window, { duration: 1, scrollTo: { y: this.getAttribute('href'), offsetY: 80 } });
-            });
-        });
-    </script>
+  <div class="project-grid">
+    <article class="project featured">
+      <div class="project-top"><span class="tag">PRODUCTION · EDGE AI</span><span>01</span></div>
+      <h3>PPE Safety Detection</h3>
+      <p>
+        Real-time industrial PPE monitoring using YOLO-based object detection, optimized with TensorRT
+        and deployed on NVIDIA Jetson Orin Nano. Connected to live CCTV/RTSP video, backend services,
+        AWS and a monitoring dashboard.
+      </p>
+      <div class="tech"><span>YOLO</span><span>PyTorch</span><span>TensorRT</span><span>Jetson</span><span>AWS</span><span>RTSP</span></div>
+    </article>
+
+    <article class="project">
+      <div class="project-top"><span class="tag">TOOLS · COMPUTER VISION</span><span>02</span></div>
+      <h3>TalkpoolVision</h3>
+      <p>
+        Local computer vision annotation tool designed to support image annotation and dataset preparation
+        for object detection workflows.
+      </p>
+      <div class="tech"><span>Python</span><span>Computer Vision</span><span>Annotation</span><span>Local App</span></div>
+    </article>
+
+    <article class="project">
+      <div class="project-top"><span class="tag">RESEARCH · EDGE AI</span><span>03</span></div>
+      <h3>EcoX-Edge</h3>
+      <p>
+        Explainable, energy-aware predictive maintenance framework combining CNN-Transformer modeling,
+        Conv-VAE augmentation, PPO reinforcement learning and edge optimization.
+      </p>
+      <div class="tech"><span>PyTorch</span><span>Transformers</span><span>PPO</span><span>SHAP</span><span>Jetson</span></div>
+    </article>
+
+    <article class="project">
+      <div class="project-top"><span class="tag">GENAI · AUTOML</span><span>04</span></div>
+      <h3>InsightGenAI</h3>
+      <p>
+        LLM-powered AutoML data analyst built with Streamlit, combining automated EDA, machine learning,
+        SHAP explainability and natural-language dataset analysis.
+      </p>
+      <div class="tech"><span>Python</span><span>Streamlit</span><span>XGBoost</span><span>SHAP</span><span>LLM</span></div>
+      <div class="project-links">
+        <a href="https://github.com/mohsinbhatti142" target="_blank">GitHub ↗</a>
+        <a href="https://mohsinbhatti-insightgenai.hf.space" target="_blank">Live demo ↗</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="skills" class="section">
+  <p class="eyebrow">TECHNICAL SKILLS</p>
+  <h2>My toolkit</h2>
+  <div class="skills-grid">
+    <div><h3>Programming</h3><p>Python · SQL · Bash</p></div>
+    <div><h3>Computer Vision</h3><p>OpenCV · YOLO · Object Detection · Image Processing · CCTV/RTSP</p></div>
+    <div><h3>Deep Learning</h3><p>PyTorch · TensorFlow · Keras · Transformers · Sentence-Transformers</p></div>
+    <div><h3>Machine Learning</h3><p>Scikit-learn · XGBoost · LightGBM · Random Forest · SHAP · Optuna</p></div>
+    <div><h3>Deployment</h3><p>TensorRT · ONNX · FastAPI · Docker · Git · Linux</p></div>
+    <div><h3>Cloud & Edge</h3><p>AWS · AWS Amplify · NVIDIA Jetson Orin Nano · NVIDIA GPUs</p></div>
+    <div><h3>Data & Annotation</h3><p>CVAT · X-AnyLabeling · Roboflow · Dataset Curation · Augmentation</p></div>
+    <div><h3>Research</h3><p>Explainable AI · Reinforcement Learning · Predictive Maintenance · Edge AI</p></div>
+  </div>
+</section>
+
+<section id="research" class="section research">
+  <p class="eyebrow">RESEARCH</p>
+  <h2>EcoX-Edge</h2>
+  <p class="research-lead">
+    Explainable Edge-Deployable Transformers with Adaptive Compression for Sustainable Predictive Maintenance.
+  </p>
+  <div class="research-grid">
+    <div><strong>0.985</strong><span>R² on industrial sensor datasets</span></div>
+    <div><strong>25%</strong><span>Dataset diversity increase using Conv-VAE</span></div>
+    <div><strong>20%</strong><span>Power reduction through energy-aware scheduling</span></div>
+    <div><strong>&lt;20ms</strong><span>Reported edge inference latency</span></div>
+  </div>
+</section>
+
+<section id="contact" class="section contact">
+  <div>
+    <p class="eyebrow">CONTACT</p>
+    <h2>Let's build something useful.</h2>
+    <p>I'm interested in Machine Learning, Computer Vision, Edge AI and Applied AI opportunities.</p>
+  </div>
+  <div class="contact-links">
+    <a href="mailto:mohsinsherazbhatti142@gmail.com">mohsinsherazbhatti142@gmail.com</a>
+    <a href="https://www.linkedin.com/in/mohsin-sheraz-142nb/" target="_blank">LinkedIn ↗</a>
+    <a href="https://github.com/mohsinbhatti142" target="_blank">GitHub ↗</a>
+    <span>Islamabad, Pakistan</span>
+  </div>
+</section>
+</main>
+
+<footer>
+  <span>© 2026 Mohsin Sheraz</span>
+  <span>Machine Learning Engineer · Computer Vision · Edge AI</span>
+</footer>
+<script src="script.js"></script>
 </body>
 </html>
